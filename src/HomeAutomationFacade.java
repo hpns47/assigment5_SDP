@@ -3,37 +3,62 @@ public class HomeAutomationFacade {
     private Device musicSystem;
     private Thermostat thermostat;
     private Device securityCamera;
+    private Device doorLock;
+    private final DeviceStateRepository repo = new DeviceStateRepository();
 
-    public HomeAutomationFacade(Device light, Device musicSystem, Thermostat thermostat, Device securityCamera) {
+    public HomeAutomationFacade(Device light, Device musicSystem, Thermostat thermostat, Device securityCamera, Device doorLock) {
         this.light = light;
         this.musicSystem = musicSystem;
         this.thermostat = thermostat;
         this.securityCamera = securityCamera;
-    }
-
-    public void activateNightMode() {
-        System.out.println("\n Activating Night Mode ");
-        light.operate();
-        thermostat.setTemperature(18);
-        thermostat.operate();
-        securityCamera.operate();
+        this.doorLock = doorLock;
     }
 
     public void startPartyMode() {
-        System.out.println("\nStarting Party Mode ");
+        Logger.getInstance().log("\nStarting Party Mode");
         light.operate();
-        System.out.println("Lights dimmed for party atmosphere.");
         musicSystem.operate();
-        System.out.println("Music volume set to HIGH.");
+        thermostat.setTemperature(21);
+        Logger.getInstance().log("Lights dimmed and music volume set to HIGH.");
+        repo.saveDeviceState("SystemMode", "Party");
+    }
+
+    public void activateNightMode() {
+        Logger.getInstance().log("\nActivating Night Mode");
+        light.operate();
+        thermostat.setTemperature(18);
+        securityCamera.operate();
+        doorLock.operate();
+        repo.saveDeviceState("SystemMode", "Night");
     }
 
     public void leaveHome() {
-        System.out.println("\nLeaving Home");
-        System.out.println("Turning off all devices...");
+        Logger.getInstance().log("\nLeaving Hom");
         light.operate();
+        musicSystem.operate();
         thermostat.setTemperature(16);
-        thermostat.operate();
         securityCamera.operate();
-        System.out.println("Security system armed.");
+        doorLock.operate();
+        repo.saveDeviceState("SystemMode", "Away");
+        Logger.getInstance().log("Security system armed and house locked.");
+    }
+
+    public void vacationMode() {
+        Logger.getInstance().log("\nVacation Mode");
+        light.operate();
+        thermostat.setTemperature(15);
+        securityCamera.operate();
+        doorLock.operate();
+        repo.saveDeviceState("SystemMode", "Vacation");
+        Logger.getInstance().log("All devices minimized for long-term energy saving.");
+    }
+
+    public void morningMode() {
+        Logger.getInstance().log("\nMorning Mode");
+        light.operate();
+        thermostat.setTemperature(22);
+        musicSystem.operate();
+        repo.saveDeviceState("SystemMode", "Morning");
+        Logger.getInstance().log("Good morning! Lights and music are on.");
     }
 }

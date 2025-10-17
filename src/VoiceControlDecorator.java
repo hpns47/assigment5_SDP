@@ -6,10 +6,6 @@ public class VoiceControlDecorator extends DeviceDecorator {
     @Override
     public void operate() {
         super.operate();
-        addVoiceControl();
-    }
-
-    private void addVoiceControl() {
-        System.out.println("Voice control activated.");
+        Logger.getInstance().log("Voice control feature enabled.");
     }
 }
