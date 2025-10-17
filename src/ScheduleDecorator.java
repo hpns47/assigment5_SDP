@@ -8,7 +8,7 @@ public class ScheduleDecorator extends DeviceDecorator {
 
     @Override
     public void operate() {
-        Logger.getInstance().log("→ Scheduled to activate in " + delaySeconds + " seconds...");
+        Logger.getInstance().log("Scheduled to activate in " + delaySeconds + " seconds...");
         try {
             Thread.sleep(delaySeconds * 1000L);
         } catch (InterruptedException e) {
